@@ -14,6 +14,7 @@ from datetime import datetime
 from django.contrib.auth.hashers import make_password
 from postmark import PMMail
 from django.db.models import Sum, Count
+from django.views.decorators.http import require_POST
 
 
 # Create your views here.
@@ -29,7 +30,7 @@ def get_client_ip(request):
         ip = request.META.get('REMOTE_ADDR')
     return ip
 
-
+@require_POST
 def grecaptcha_verify(request):
     data = request.POST
     captcha_rs = data.get('g-recaptcha-response')
@@ -97,6 +98,7 @@ def register(request):
         return render(request, 'register.html', context)
 
 @csrf_exempt
+@require_POST
 def generalstat(request):
     #TODO: should get a valid duration (from - to), if not, use 1 month
     #TODO: is the token valid?
@@ -115,6 +117,7 @@ def index(request):
     return render(request, 'index.html', context)
 
 @csrf_exempt
+@require_POST
 def submit_income(request):
     """ submit an income """
 
@@ -132,6 +135,7 @@ def submit_income(request):
     }, encoder=JSONEncoder)
 
 @csrf_exempt
+@require_POST
 def submit_expense(request):
     """ submit an expense """
 
